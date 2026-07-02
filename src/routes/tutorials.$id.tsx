@@ -84,7 +84,7 @@ function TutorialPage() {
         <div className="md:col-span-2">
           <h2 className="font-display text-2xl mb-4">Step by step</h2>
           <ol className="space-y-4">
-            {t.steps.map((s, i) => (
+            {t.steps.map((s: string, i: number) => (
               <li key={i} className="flex gap-4">
                 <span className="mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">{i + 1}</span>
                 <p className="text-foreground/90">{s}</p>
@@ -96,7 +96,7 @@ function TutorialPage() {
           <div className="rounded-2xl border border-border bg-cream p-5">
             <h3 className="font-display text-lg mb-3">You'll need</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              {t.materials.map((m) => (
+              {t.materials.map((m: string) => (
                 <li key={m} className="flex gap-2"><Check className="h-4 w-4 text-primary mt-0.5" /> {m}</li>
               ))}
             </ul>
