@@ -1,10 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Bookmark, Check, Clock, Lock } from "lucide-react";
-import { getTutorial } from "@/lib/data";
+import { getTutorial, type Tutorial } from "@/lib/data";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/tutorials/$id")({
-  loader: ({ params }) => {
+  loader: ({ params }): Tutorial => {
     const t = getTutorial(params.id);
     if (!t) throw notFound();
     return t;

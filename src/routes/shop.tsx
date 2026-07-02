@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search, Star } from "lucide-react";
+import { Search as SearchIcon, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { products, categories, type Product } from "@/lib/data";
 
-type Search = { category?: string; q?: string };
+type ShopSearch = { category?: string; q?: string };
 
 export const Route = createFileRoute("/shop")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
+  validateSearch: (s: Record<string, unknown>): ShopSearch => ({
     category: typeof s.category === "string" ? s.category : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
@@ -49,7 +49,7 @@ function Shop() {
             <button
               key={c}
               onClick={() =>
-                navigate({ search: (prev) => ({ ...prev, category: c === "All" ? undefined : c }) })
+                navigate({ search: (prev: ShopSearch) => ({ ...prev, category: c === "All" ? undefined : c }) })
               }
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors border ${
                 active === c
@@ -62,12 +62,13 @@ function Shop() {
           ))}
         </div>
         <div className="relative w-full md:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => {
-              setQuery(e.target.value);
-              navigate({ search: (prev) => ({ ...prev, q: e.target.value || undefined }) });
+              const v = e.target.value;
+              setQuery(v);
+              navigate({ search: (prev: ShopSearch) => ({ ...prev, q: v || undefined }) });
             }}
             placeholder="Search products…"
             className="w-full rounded-full bg-background border border-border pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"

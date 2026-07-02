@@ -1,11 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Heart, ShoppingBag, Star, Truck } from "lucide-react";
 import { useState } from "react";
-import { getProduct, products } from "@/lib/data";
+import { getProduct, products, type Product } from "@/lib/data";
 import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/shop/$id")({
-  loader: ({ params }) => {
+  loader: ({ params }): Product => {
     const p = getProduct(params.id);
     if (!p) throw notFound();
     return p;
