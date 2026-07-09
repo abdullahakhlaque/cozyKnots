@@ -4,9 +4,9 @@ import heroImg from "@/assets/hero.jpg";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Hook & Loop Creations" },
-      { name: "description", content: "The story behind Hook & Loop Creations — a small crochet studio making cozy handmade goods and teaching the craft." },
-      { property: "og:title", content: "About Hook & Loop Creations" },
+      { title: "About — CozyKnots" },
+      { name: "description", content: "The story behind CozyKnots — a small crochet studio making cozy handmade goods and teaching the craft." },
+      { property: "og:title", content: "About CozyKnots" },
       { property: "og:description", content: "A tiny studio, a big yarn stash, and a love for teaching the craft." },
     ],
   }),
@@ -20,7 +20,7 @@ function About() {
         <div className="mx-auto max-w-4xl px-4 py-20 text-center">
           <h1 className="font-display text-5xl">Made by hand, meant to last.</h1>
           <p className="mt-5 text-muted-foreground text-lg">
-            Hook &amp; Loop Creations is a one-person crochet studio founded in 2021.
+            CozyKnots is a one-person crochet studio founded in 2021.
             We make cozy things, teach the craft, and champion slow, thoughtful making.
           </p>
         </div>

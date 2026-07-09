@@ -71,10 +71,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Hook & Loop Creations — Handmade Crochet Shop & Tutorials" },
+      { title: "CozyKnots — Handmade Crochet Shop & Tutorials" },
       { name: "description", content: "Shop cozy handmade crochet goods — bags, plushies, sweaters and home décor — and learn to crochet with beginner to advanced video tutorials." },
-      { name: "author", content: "Hook & Loop Creations" },
-      { property: "og:title", content: "Hook & Loop Creations — Handmade Crochet Shop & Tutorials" },
+      { name: "author", content: "CozyKnots" },
+      { property: "og:title", content: "CozyKnots — Handmade Crochet Shop & Tutorials" },
       { property: "og:description", content: "Handmade crochet marketplace and cozy learning hub for crafters at every level." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -10,7 +10,7 @@ type AuthCtx = {
 };
 
 const Ctx = createContext<AuthCtx | null>(null);
-const KEY = "hlc_user_v1";
+const KEY = "ck_user_v1";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

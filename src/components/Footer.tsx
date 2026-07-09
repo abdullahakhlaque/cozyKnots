@@ -10,7 +10,7 @@ export function Footer() {
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-display">
               &amp;
             </span>
-            <span className="font-display text-xl">Hook &amp; Loop</span>
+            <span className="font-display text-xl">CozyKnots</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs">
             Handmade crochet goods and cozy tutorials, made with love in small batches.
@@ -43,7 +43,7 @@ export function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-muted-foreground flex items-center justify-between flex-wrap gap-2">
-          <span>© {new Date().getFullYear()} Hook &amp; Loop Creations</span>
+          <span>© {new Date().getFullYear()} CozyKnots</span>
           <span className="inline-flex items-center gap-1">Made with <Heart className="h-3 w-3 fill-primary text-primary" /> and yarn</span>
         </div>
       </div>

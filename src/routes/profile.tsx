@@ -7,7 +7,7 @@ import { products, tutorials } from "@/lib/data";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Your Dashboard — Hook & Loop Creations" },
+      { title: "Your Dashboard — CozyKnots" },
       { name: "robots", content: "noindex" },
     ],
   }),

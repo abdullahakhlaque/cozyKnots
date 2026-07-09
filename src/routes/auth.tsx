@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Hook & Loop Creations" },
+      { title: "Sign in — CozyKnots" },
       { name: "robots", content: "noindex" },
     ],
   }),
