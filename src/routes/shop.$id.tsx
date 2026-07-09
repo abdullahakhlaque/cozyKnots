@@ -13,7 +13,7 @@ export const Route = createFileRoute("/shop/$id")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.name} — Hook & Loop Creations` },
+          { title: `${loaderData.name} — CozyKnots` },
           { name: "description", content: loaderData.description },
           { property: "og:title", content: loaderData.name },
           { property: "og:description", content: loaderData.description },

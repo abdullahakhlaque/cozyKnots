@@ -8,9 +8,9 @@ const levels = ["All", "Beginner", "Intermediate", "Advanced"] as const;
 export const Route = createFileRoute("/tutorials")({
   head: () => ({
     meta: [
-      { title: "Crochet Tutorials — Hook & Loop Creations" },
+      { title: "Crochet Tutorials — CozyKnots" },
       { name: "description", content: "Beginner to advanced crochet tutorials with step-by-step videos, material lists and written instructions." },
-      { property: "og:title", content: "Crochet Tutorials — Hook & Loop Creations" },
+      { property: "og:title", content: "Crochet Tutorials — CozyKnots" },
       { property: "og:description", content: "Learn crochet at your own pace with cozy, easy-to-follow video lessons." },
     ],
   }),

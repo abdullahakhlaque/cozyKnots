@@ -12,9 +12,9 @@ const schema = z.object({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Hook & Loop Creations" },
-      { name: "description", content: "Get in touch with the Hook & Loop studio about orders, custom pieces or tutorials." },
-      { property: "og:title", content: "Contact — Hook & Loop Creations" },
+      { title: "Contact — CozyKnots" },
+      { name: "description", content: "Get in touch with the CozyKnots studio about orders, custom pieces or tutorials." },
+      { property: "og:title", content: "Contact — CozyKnots" },
       { property: "og:description", content: "Say hello to our tiny crochet studio." },
     ],
   }),
@@ -51,8 +51,8 @@ function Contact() {
           Custom orders, tutorial questions, wholesale — we'd love to hear from you. We reply within a few days.
         </p>
         <ul className="mt-8 space-y-4 text-sm">
-          <li className="inline-flex items-center gap-3"><Mail className="h-4 w-4 text-primary" /> hello@hookandloop.co</li>
-          <li className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-primary" /> @hookandloop on Instagram</li>
+          <li className="inline-flex items-center gap-3"><Mail className="h-4 w-4 text-primary" /> hello@cozyknots.co</li>
+          <li className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-primary" /> @cozyknots on Instagram</li>
           <li className="inline-flex items-center gap-3"><MapPin className="h-4 w-4 text-primary" /> Portland, Oregon</li>
         </ul>
       </div>

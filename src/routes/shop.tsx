@@ -12,9 +12,9 @@ export const Route = createFileRoute("/shop")({
   }),
   head: () => ({
     meta: [
-      { title: "Shop — Hook & Loop Creations" },
+      { title: "Shop — CozyKnots" },
       { name: "description", content: "Browse handmade crochet bags, plushies, sweaters, accessories and home décor." },
-      { property: "og:title", content: "Shop — Hook & Loop Creations" },
+      { property: "og:title", content: "Shop — CozyKnots" },
       { property: "og:description", content: "Handmade crochet goods, small batch and full of character." },
     ],
   }),

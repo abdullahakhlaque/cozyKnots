@@ -24,7 +24,7 @@ export function Header() {
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-display text-lg">
             &amp;
           </span>
-          <span className="font-display text-xl">Hook &amp; Loop</span>
+          <span className="font-display text-xl">CozyKnots</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
