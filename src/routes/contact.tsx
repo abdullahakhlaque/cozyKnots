@@ -13,7 +13,7 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — CozyKnots" },
-      { name: "description", content: "Get in touch with the Hook & Loop studio about orders, custom pieces or tutorials." },
+      { name: "description", content: "Get in touch with the CozyKnots studio about orders, custom pieces or tutorials." },
       { property: "og:title", content: "Contact — CozyKnots" },
       { property: "og:description", content: "Say hello to our tiny crochet studio." },
     ],
