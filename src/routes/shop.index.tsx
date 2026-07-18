@@ -5,7 +5,7 @@ import { products, categories, type Product } from "@/lib/data";
 
 type ShopSearch = { category?: string; q?: string };
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   validateSearch: (s: Record<string, unknown>): ShopSearch => ({
     category: typeof s.category === "string" ? s.category : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
