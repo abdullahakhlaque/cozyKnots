@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorialsRouteImport } from './routes/tutorials'
-import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -18,17 +17,13 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as TutorialsIdRouteImport } from './routes/tutorials.$id'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 
 const TutorialsRoute = TutorialsRouteImport.update({
   id: '/tutorials',
   path: '/tutorials',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -66,6 +61,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TutorialsIdRoute = TutorialsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -85,10 +85,10 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/profile': typeof ProfileRoute
-  '/shop': typeof ShopRouteWithChildren
   '/tutorials': typeof TutorialsRouteWithChildren
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -98,10 +98,10 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/profile': typeof ProfileRoute
-  '/shop': typeof ShopRouteWithChildren
   '/tutorials': typeof TutorialsRouteWithChildren
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
+  '/shop': typeof ShopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -112,10 +112,10 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/profile': typeof ProfileRoute
-  '/shop': typeof ShopRouteWithChildren
   '/tutorials': typeof TutorialsRouteWithChildren
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,10 +127,10 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/profile'
-    | '/shop'
     | '/tutorials'
     | '/shop/$id'
     | '/tutorials/$id'
+    | '/shop/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,10 +140,10 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/profile'
-    | '/shop'
     | '/tutorials'
     | '/shop/$id'
     | '/tutorials/$id'
+    | '/shop'
   id:
     | '__root__'
     | '/'
@@ -153,10 +153,10 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/profile'
-    | '/shop'
     | '/tutorials'
     | '/shop/$id'
     | '/tutorials/$id'
+    | '/shop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,8 +167,8 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   ProfileRoute: typeof ProfileRoute
-  ShopRoute: typeof ShopRouteWithChildren
   TutorialsRoute: typeof TutorialsRouteWithChildren
+  ShopIndexRoute: typeof ShopIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,13 +178,6 @@ declare module '@tanstack/react-router' {
       path: '/tutorials'
       fullPath: '/tutorials'
       preLoaderRoute: typeof TutorialsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -236,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tutorials/$id': {
       id: '/tutorials/$id'
       path: '/$id'
@@ -252,16 +252,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface ShopRouteChildren {
-  ShopIdRoute: typeof ShopIdRoute
-}
-
-const ShopRouteChildren: ShopRouteChildren = {
-  ShopIdRoute: ShopIdRoute,
-}
-
-const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
 
 interface TutorialsRouteChildren {
   TutorialsIdRoute: typeof TutorialsIdRoute
@@ -283,8 +273,8 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   ProfileRoute: ProfileRoute,
-  ShopRoute: ShopRouteWithChildren,
   TutorialsRoute: TutorialsRouteWithChildren,
+  ShopIndexRoute: ShopIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
