@@ -3,6 +3,7 @@ import { ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
+import { GoogleLogin } from "@react-oauth/google"; // <-- Added Google Import
 
 const nav = [
   { to: "/", label: "Home" },
@@ -14,7 +15,7 @@ const nav = [
 
 export function Header() {
   const { count } = useCart();
-  const { user } = useAuth();
+  const { user } = useAuth(); // If your AuthProvider sets user details, we can check it here
   const [open, setOpen] = useState(false);
 
   return (
@@ -39,16 +40,45 @@ export function Header() {
               {n.label}
             </Link>
           ))}
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              className="text-sm font-semibold text-primary hover:underline transition-colors"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Link
-            to={user ? "/profile" : "/auth"}
-            className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-muted transition-colors"
-            aria-label="Account"
-          >
-            <User className="h-5 w-5" />
-          </Link>
+        <div className="flex items-center gap-3"> {/* Adjusted gap slightly for Google button */}
+          
+          {/* If user is logged in, show profile icon. Otherwise, show Google Sign-In */}
+          {user ? (
+            <Link
+              to="/profile"
+              className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-muted transition-colors"
+              aria-label="Account"
+            >
+              <User className="h-5 w-5" />
+            </Link>
+          ) : (
+            <div className="hidden sm:block">
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  console.log("Google Login Token:", credentialResponse.credential);
+                  // TODO: Connect this token to your backend or update your useAuth() system
+                }}
+                onError={() => {
+                  console.log("Google Login Failed");
+                }}
+                useOneTap
+                theme="outline"
+                shape="pill"
+                size="medium"
+              />
+            </div>
+          )}
+
           <Link
             to="/cart"
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-muted transition-colors"
@@ -86,6 +116,22 @@ export function Header() {
                 {n.label}
               </Link>
             ))}
+            
+            {/* Added Google Sign-In button inside the mobile drawer menu when logged out */}
+            {!user && (
+              <div className="pt-2">
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    console.log("Google Login Token:", credentialResponse.credential);
+                  }}
+                  onError={() => {
+                    console.log("Google Login Failed");
+                  }}
+                  theme="outline"
+                  width="100%"
+                />
+              </div>
+            )}
           </nav>
         </div>
       )}

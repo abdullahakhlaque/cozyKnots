@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, PlayCircle, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 import heroImg from "@/assets/hero.jpg";
-import { products, tutorials } from "@/lib/data";
+import { products, getAllTutorials, subscribeToTutorialChanges, type Tutorial } from "@/lib/data";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -9,7 +10,18 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const featured = products.slice(0, 4);
-  const trending = tutorials.slice(0, 3);
+  const [trending, setTrending] = useState<Tutorial[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    const loadTutorials = async () => {
+      const list = await getAllTutorials();
+      if (active) setTrending(list.slice(0, 3));
+    };
+
+    void loadTutorials();
+    return subscribeToTutorialChanges(() => void loadTutorials());
+  }, []);
 
   return (
     <div>
@@ -21,18 +33,22 @@ function Home() {
               <Sparkles className="h-3.5 w-3.5 text-primary" /> Handmade in small batches
             </span>
             <h1 className="mt-5 font-display text-5xl sm:text-6xl leading-[1.05]">
-              Cozy things,<br />
+              Cozy things,
+              <br />
               <span className="text-primary italic">stitch by stitch.</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-lg">
-              Shop soft handmade crochet goods, or pick up a hook and learn a new stitch
-              with our beginner-to-advanced video tutorials.
+              Shop soft handmade crochet goods, or pick up a hook and learn a new stitch with our
+              beginner-to-advanced video tutorials.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/shop" className="btn-primary btn-primary-hover">
                 Shop the collection <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/tutorials" className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold hover:bg-muted transition-colors">
+              <Link
+                to="/tutorials"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold hover:bg-muted transition-colors"
+              >
                 <PlayCircle className="h-4 w-4" /> Watch tutorials
               </Link>
             </div>
@@ -66,7 +82,10 @@ function Home() {
             <h2 className="font-display text-3xl sm:text-4xl">Featured pieces</h2>
             <p className="text-muted-foreground mt-1">Newest additions to the studio.</p>
           </div>
-          <Link to="/shop" className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:gap-2 transition-all">
+          <Link
+            to="/shop"
+            className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:gap-2 transition-all"
+          >
             View all <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -108,11 +127,14 @@ function Home() {
               A little studio, a big yarn stash.
             </h2>
             <p className="mt-4 text-muted-foreground max-w-xl">
-              Every plushie, tote and blanket is stitched by hand in our sunny corner studio.
-              We use natural fibres, gentle dyes and patterns tested in our own home.
+              Every plushie, tote and blanket is stitched by hand in our sunny corner studio. We use
+              natural fibres, gentle dyes and patterns tested in our own home.
             </p>
           </div>
-          <Link to="/about" className="justify-self-start md:justify-self-end btn-primary btn-primary-hover">
+          <Link
+            to="/about"
+            className="justify-self-start md:justify-self-end btn-primary btn-primary-hover"
+          >
             Our story <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -125,7 +147,10 @@ function Home() {
             <h2 className="font-display text-3xl sm:text-4xl">Trending tutorials</h2>
             <p className="text-muted-foreground mt-1">Learn a new stitch this weekend.</p>
           </div>
-          <Link to="/tutorials" className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:gap-2 transition-all">
+          <Link
+            to="/tutorials"
+            className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:gap-2 transition-all"
+          >
             Browse all <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -185,7 +210,9 @@ function Home() {
               placeholder="you@example.com"
               className="flex-1 rounded-full bg-background border border-border px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
-            <button type="submit" className="btn-primary btn-primary-hover">Subscribe</button>
+            <button type="submit" className="btn-primary btn-primary-hover">
+              Subscribe
+            </button>
           </form>
         </div>
       </section>

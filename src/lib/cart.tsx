@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Product } from "./data";
 
-type CartItem = { product: Product; qty: number };
+export type CartItem = { product: Product; qty: number };
 
 type CartCtx = {
   items: CartItem[];
@@ -24,7 +24,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setItems(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // Ignore malformed stored carts.
+    }
   }, []);
 
   useEffect(() => {

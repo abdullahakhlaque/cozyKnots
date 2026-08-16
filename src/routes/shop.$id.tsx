@@ -26,7 +26,9 @@ export const Route = createFileRoute("/shop/$id")({
     <div className="mx-auto max-w-3xl px-4 py-24 text-center">
       <h1 className="font-display text-3xl">Product not found</h1>
       <p className="mt-3 text-muted-foreground">This piece may have sold out or moved.</p>
-      <Link to="/shop" className="btn-primary btn-primary-hover mt-6 inline-flex">Back to shop</Link>
+      <Link to="/shop" className="btn-primary btn-primary-hover mt-6 inline-flex">
+        Back to shop
+      </Link>
     </div>
   ),
 });
@@ -41,7 +43,10 @@ function ProductPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-      <Link to="/shop" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
+      <Link
+        to="/shop"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"
+      >
         <ArrowLeft className="h-4 w-4" /> Back to shop
       </Link>
 
@@ -72,9 +77,19 @@ function ProductPage() {
 
           <div className="mt-8 flex items-center gap-3">
             <div className="inline-flex items-center rounded-full border border-border">
-              <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="h-11 w-11 text-lg">−</button>
+              <button
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                className="h-11 w-11 text-lg"
+              >
+                −
+              </button>
               <span className="w-10 text-center font-semibold">{qty}</span>
-              <button onClick={() => setQty((q) => Math.min(product.stock, q + 1))} className="h-11 w-11 text-lg">+</button>
+              <button
+                onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
+                className="h-11 w-11 text-lg"
+              >
+                +
+              </button>
             </div>
             <button
               onClick={() => {
@@ -87,13 +102,18 @@ function ProductPage() {
               <ShoppingBag className="h-4 w-4" />
               {added ? "Added!" : "Add to cart"}
             </button>
-            <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted" aria-label="Save">
+            <button
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted"
+              aria-label="Save"
+            >
               <Heart className="h-5 w-5" />
             </button>
           </div>
 
           <div className="mt-8 text-xs text-muted-foreground">
-            {product.stock > 0 ? `${product.stock} in stock — made to order after that.` : "Sold out"}
+            {product.stock > 0
+              ? `${product.stock} in stock — made to order after that.`
+              : "Sold out"}
           </div>
         </div>
       </div>
@@ -102,9 +122,21 @@ function ProductPage() {
         <h2 className="font-display text-2xl mb-6">You might also love</h2>
         <div className="grid gap-6 sm:grid-cols-3">
           {related.map((p) => (
-            <Link key={p.id} to="/shop/$id" params={{ id: p.id }} className="card-soft overflow-hidden group block">
+            <Link
+              key={p.id}
+              to="/shop/$id"
+              params={{ id: p.id }}
+              className="card-soft overflow-hidden group block"
+            >
               <div className="aspect-square overflow-hidden bg-muted">
-                <img src={p.image} alt={p.name} width={900} height={900} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  width={900}
+                  height={900}
+                  loading="lazy"
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
               <div className="p-4 flex items-baseline justify-between">
                 <h3 className="font-display text-lg">{p.name}</h3>

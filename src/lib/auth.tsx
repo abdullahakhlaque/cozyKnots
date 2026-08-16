@@ -20,7 +20,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setUser(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // Ignore malformed stored sessions.
+    }
   }, []);
 
   const value = useMemo<AuthCtx>(() => {
@@ -35,11 +37,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       login: async (email: string) => {
         const role = email.toLowerCase().includes("admin") ? "admin" : "customer";
-        persist({ name: email.split("@")[0] || "Friend", email, role });
+        const displayName = role === "admin" ? "Nashra" : email.split("@")[0] || "Friend";
+        persist({ name: displayName, email, role });
       },
       register: async (name, email) => {
         const role = email.toLowerCase().includes("admin") ? "admin" : "customer";
-        persist({ name, email, role });
+        const displayName = name || (role === "admin" ? "Nashra" : email.split("@")[0] || "Friend");
+        persist({ name: displayName, email, role });
       },
       logout: () => persist(null),
     };

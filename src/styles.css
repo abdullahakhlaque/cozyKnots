@@ -47,34 +47,34 @@
   --radius: 1rem;
 
   /* Pastel handmade palette */
-  --background: oklch(0.985 0.012 80);      /* cream */
-  --foreground: oklch(0.30 0.03 30);        /* warm dark brown */
+  --background: oklch(0.985 0.012 80); /* cream */
+  --foreground: oklch(0.3 0.03 30); /* warm dark brown */
 
   --card: oklch(0.995 0.006 80);
-  --card-foreground: oklch(0.30 0.03 30);
+  --card-foreground: oklch(0.3 0.03 30);
   --popover: oklch(0.995 0.006 80);
-  --popover-foreground: oklch(0.30 0.03 30);
+  --popover-foreground: oklch(0.3 0.03 30);
 
-  --primary: oklch(0.62 0.09 20);           /* dusty rose */
+  --primary: oklch(0.62 0.09 20); /* dusty rose */
   --primary-foreground: oklch(0.99 0.005 80);
 
-  --secondary: oklch(0.92 0.03 320);        /* soft lavender */
+  --secondary: oklch(0.92 0.03 320); /* soft lavender */
   --secondary-foreground: oklch(0.35 0.05 320);
 
   --muted: oklch(0.95 0.015 70);
-  --muted-foreground: oklch(0.50 0.03 40);
+  --muted-foreground: oklch(0.5 0.03 40);
 
-  --accent: oklch(0.90 0.05 10);            /* soft pink */
+  --accent: oklch(0.9 0.05 10); /* soft pink */
   --accent-foreground: oklch(0.35 0.06 20);
 
-  --destructive: oklch(0.60 0.19 25);
+  --destructive: oklch(0.6 0.19 25);
   --destructive-foreground: oklch(0.99 0.005 80);
 
-  --border: oklch(0.90 0.02 60);
+  --border: oklch(0.9 0.02 60);
   --input: oklch(0.92 0.015 60);
   --ring: oklch(0.75 0.06 20);
 
-  --blush: oklch(0.90 0.05 10);
+  --blush: oklch(0.9 0.05 10);
   --lavender: oklch(0.88 0.04 310);
   --cream: oklch(0.97 0.02 85);
   --sand: oklch(0.88 0.03 75);
@@ -93,7 +93,10 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: -0.01em;
@@ -111,7 +114,10 @@
   color: var(--color-primary-foreground);
   font-weight: 600;
   box-shadow: var(--shadow-cozy);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 @utility btn-primary-hover {
   &:hover {
@@ -125,7 +131,9 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-soft);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 40px -18px color-mix(in oklab, var(--foreground) 25%, transparent);
@@ -134,7 +142,15 @@
 
 @utility bg-hero-gradient {
   background-image:
-    radial-gradient(circle at 20% 20%, color-mix(in oklab, var(--blush) 60%, transparent), transparent 55%),
-    radial-gradient(circle at 80% 30%, color-mix(in oklab, var(--lavender) 60%, transparent), transparent 55%),
+    radial-gradient(
+      circle at 20% 20%,
+      color-mix(in oklab, var(--blush) 60%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      color-mix(in oklab, var(--lavender) 60%, transparent),
+      transparent 55%
+    ),
     linear-gradient(180deg, var(--cream), var(--background));
 }

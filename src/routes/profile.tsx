@@ -6,10 +6,7 @@ import { products, tutorials } from "@/lib/data";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
-    meta: [
-      { title: "Your Dashboard — CozyKnots" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Your Dashboard — CozyKnots" }, { name: "robots", content: "noindex" }],
   }),
   component: Profile,
 });
@@ -33,10 +30,18 @@ function Profile() {
           <p className="text-sm text-muted-foreground">Welcome back,</p>
           <h1 className="font-display text-4xl">{user.name} 🧶</h1>
           {isAdmin && (
-            <span className="mt-2 inline-block rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold">Admin</span>
+            <span className="mt-2 inline-block rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold">
+              Admin
+            </span>
           )}
         </div>
-        <button onClick={() => { logout(); navigate({ to: "/" }); }} className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted">
+        <button
+          onClick={() => {
+            logout();
+            navigate({ to: "/" });
+          }}
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted"
+        >
           <LogOut className="h-4 w-4" /> Sign out
         </button>
       </div>
@@ -65,7 +70,14 @@ function Profile() {
             <ul className="rounded-2xl border border-border divide-y divide-border bg-card">
               {products.slice(0, 3).map((p, i) => (
                 <li key={p.id} className="p-4 flex items-center gap-4">
-                  <img src={p.image} alt="" width={64} height={64} loading="lazy" className="h-16 w-16 rounded-lg object-cover" />
+                  <img
+                    src={p.image}
+                    alt=""
+                    width={64}
+                    height={64}
+                    loading="lazy"
+                    className="h-16 w-16 rounded-lg object-cover"
+                  />
                   <div className="flex-1">
                     <div className="font-medium">{p.name}</div>
                     <div className="text-xs text-muted-foreground">Order #100{i + 1} · Shipped</div>
@@ -80,11 +92,24 @@ function Profile() {
             <ul className="space-y-3">
               {tutorials.slice(0, 3).map((t) => (
                 <li key={t.id}>
-                  <Link to="/tutorials/$id" params={{ id: t.id }} className="flex gap-4 rounded-2xl border border-border p-3 bg-card hover:bg-muted transition-colors">
-                    <img src={t.image} alt="" width={96} height={64} loading="lazy" className="h-16 w-24 rounded-lg object-cover" />
+                  <Link
+                    to="/tutorials/$id"
+                    params={{ id: t.id }}
+                    className="flex gap-4 rounded-2xl border border-border p-3 bg-card hover:bg-muted transition-colors"
+                  >
+                    <img
+                      src={t.image}
+                      alt=""
+                      width={96}
+                      height={64}
+                      loading="lazy"
+                      className="h-16 w-24 rounded-lg object-cover"
+                    />
                     <div className="flex-1">
                       <div className="font-medium">{t.title}</div>
-                      <div className="text-xs text-muted-foreground">{t.level} · {t.duration}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {t.level} · {t.duration}
+                      </div>
                     </div>
                   </Link>
                 </li>
@@ -116,7 +141,14 @@ function AdminPanel() {
               {products.map((p) => (
                 <tr key={p.id}>
                   <td className="p-3 flex items-center gap-3">
-                    <img src={p.image} alt="" width={40} height={40} loading="lazy" className="h-10 w-10 rounded-lg object-cover" />
+                    <img
+                      src={p.image}
+                      alt=""
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      className="h-10 w-10 rounded-lg object-cover"
+                    />
                     {p.name}
                   </td>
                   <td className="p-3 text-muted-foreground">{p.category}</td>
@@ -133,10 +165,19 @@ function AdminPanel() {
         <div className="grid gap-4 md:grid-cols-2">
           {tutorials.map((t) => (
             <div key={t.id} className="rounded-2xl border border-border bg-card p-4 flex gap-4">
-              <img src={t.image} alt="" width={96} height={64} loading="lazy" className="h-16 w-24 rounded-lg object-cover" />
+              <img
+                src={t.image}
+                alt=""
+                width={96}
+                height={64}
+                loading="lazy"
+                className="h-16 w-24 rounded-lg object-cover"
+              />
               <div className="flex-1">
                 <div className="font-medium">{t.title}</div>
-                <div className="text-xs text-muted-foreground">{t.level} · {t.free ? "Free" : `$${t.price}`}</div>
+                <div className="text-xs text-muted-foreground">
+                  {t.level} · {t.free ? "Free" : `$${t.price}`}
+                </div>
               </div>
             </div>
           ))}

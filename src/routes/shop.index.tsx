@@ -13,9 +13,15 @@ export const Route = createFileRoute("/shop/")({
   head: () => ({
     meta: [
       { title: "Shop — CozyKnots" },
-      { name: "description", content: "Browse handmade crochet bags, plushies, sweaters, accessories and home décor." },
+      {
+        name: "description",
+        content: "Browse handmade crochet bags, plushies, sweaters, accessories and home décor.",
+      },
       { property: "og:title", content: "Shop — CozyKnots" },
-      { property: "og:description", content: "Handmade crochet goods, small batch and full of character." },
+      {
+        property: "og:description",
+        content: "Handmade crochet goods, small batch and full of character.",
+      },
     ],
   }),
   component: Shop,
@@ -40,7 +46,9 @@ function Shop() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="font-display text-4xl sm:text-5xl">The Shop</h1>
-        <p className="text-muted-foreground mt-2">Handmade with natural fibres, ready to ship in 3–5 days.</p>
+        <p className="text-muted-foreground mt-2">
+          Handmade with natural fibres, ready to ship in 3–5 days.
+        </p>
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
@@ -49,7 +57,12 @@ function Shop() {
             <button
               key={c}
               onClick={() =>
-                navigate({ search: (prev: ShopSearch) => ({ ...prev, category: c === "All" ? undefined : c }) })
+                navigate({
+                  search: (prev: ShopSearch) => ({
+                    ...prev,
+                    category: c === "All" ? undefined : c,
+                  }),
+                })
               }
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors border ${
                 active === c

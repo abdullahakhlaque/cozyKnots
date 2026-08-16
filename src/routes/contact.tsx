@@ -13,7 +13,10 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — CozyKnots" },
-      { name: "description", content: "Get in touch with the CozyKnots studio about orders, custom pieces or tutorials." },
+      {
+        name: "description",
+        content: "Get in touch with the CozyKnots studio about orders, custom pieces or tutorials.",
+      },
       { property: "og:title", content: "Contact — CozyKnots" },
       { property: "og:description", content: "Say hello to our tiny crochet studio." },
     ],
@@ -48,38 +51,60 @@ function Contact() {
       <div>
         <h1 className="font-display text-4xl">Say hello</h1>
         <p className="mt-3 text-muted-foreground">
-          Custom orders, tutorial questions, wholesale — we'd love to hear from you. We reply within a few days.
+          Custom orders, tutorial questions, wholesale — we'd love to hear from you. We reply within
+          a few days.
         </p>
         <ul className="mt-8 space-y-4 text-sm">
-          <li className="inline-flex items-center gap-3"><Mail className="h-4 w-4 text-primary" /> hello@cozyknots.co</li>
-          <li className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-primary" /> @cozyknots on Instagram</li>
-          <li className="inline-flex items-center gap-3"><MapPin className="h-4 w-4 text-primary" /> Portland, Oregon</li>
+          <li className="inline-flex items-center gap-3">
+            <Mail className="h-4 w-4 text-primary" /> hello@cozyknots.co
+          </li>
+          <li className="inline-flex items-center gap-3">
+            <MessageCircle className="h-4 w-4 text-primary" /> @cozyknots on Instagram
+          </li>
+          <li className="inline-flex items-center gap-3">
+            <MapPin className="h-4 w-4 text-primary" /> Portland, Oregon
+          </li>
         </ul>
       </div>
 
       {sent ? (
         <div className="rounded-2xl border border-border bg-cream p-8 h-fit">
           <h2 className="font-display text-2xl">Thanks!</h2>
-          <p className="mt-2 text-muted-foreground">Your note landed in our inbox. We'll reply soon.</p>
+          <p className="mt-2 text-muted-foreground">
+            Your note landed in our inbox. We'll reply soon.
+          </p>
         </div>
       ) : (
         <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <div>
             <label className="text-xs font-medium text-muted-foreground">Name</label>
-            <input name="name" className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+            <input
+              name="name"
+              className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
             {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-muted-foreground">Email</label>
-            <input name="email" type="email" className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+            <input
+              name="email"
+              type="email"
+              className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
             {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-muted-foreground">Message</label>
-            <textarea name="message" rows={5} className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+            <textarea
+              name="message"
+              rows={5}
+              className="mt-1 w-full rounded-xl bg-background border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
             {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message}</p>}
           </div>
-          <button type="submit" className="btn-primary btn-primary-hover w-full">Send message</button>
+          <button type="submit" className="btn-primary btn-primary-hover w-full">
+            Send message
+          </button>
         </form>
       )}
     </div>

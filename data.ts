@@ -98,10 +98,6 @@ export function getProduct(id: string) {
   return products.find((p) => p.id === id);
 }
 
-/* ---------------------------------------------------------------------- */
-/*  Tutorials                                                              */
-/* ---------------------------------------------------------------------- */
-
 export type Tutorial = {
   id: string;
   title: string;
@@ -112,14 +108,44 @@ export type Tutorial = {
   free: boolean;
   price?: number;
   videoUrl: string;
-  /** optional link to a downloadable pattern PDF, shown as a button on the detail page */
   pdfPattern?: string;
   steps: string[];
   materials: string[];
 };
 
-// Starter tutorials.
-const seedTutorials: Tutorial[] = [
+const API_BASE = "http://localhost:5000/api";
+
+export async function getAllTutorials(): Promise<Tutorial[]> {
+  const res = await fetch(`${API_BASE}/tutorials`);
+  if (!res.ok) throw new Error("Failed to fetch tutorials");
+  return res.json();
+}
+
+export async function getTutorial(id: string): Promise<Tutorial | undefined> {
+  const res = await fetch(`${API_BASE}/tutorials/${id}`);
+  if (res.status === 404) return undefined;
+  if (!res.ok) throw new Error("Failed to fetch tutorial");
+  return res.json();
+}
+
+export async function addTutorial(tutorial: Tutorial): Promise<Tutorial> {
+  const res = await fetch(`${API_BASE}/tutorials`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tutorial),
+  });
+  if (!res.ok) throw new Error("Failed to add tutorial");
+  return res.json();
+}
+
+export async function removeTutorial(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/tutorials/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Failed to remove tutorial");
+}
+
+export const tutorials: Tutorial[] = [
   {
     id: "first-stitches",
     title: "Your First Stitches: Chain & Single Crochet",
@@ -198,116 +224,6 @@ const seedTutorials: Tutorial[] = [
     ],
   },
 ];
-
-export const tutorials = seedTutorials;
-
-const STORAGE_KEY = "cozyknots_tutorials_v1";
-const DELETED_KEY = "cozyknots_deleted_tutorials_v1";
-
-function isBrowser() {
-  return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
-}
-
-export function getDeletedIds(): string[] {
-  if (!isBrowser()) return [];
-  try {
-    const raw = window.localStorage.getItem(DELETED_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch {}
-  return [];
-}
-
-export function addDeletedId(id: string) {
-  if (!isBrowser()) return;
-  const deleted = getDeletedIds();
-  if (!deleted.includes(id)) {
-    deleted.push(id);
-    window.localStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
-  }
-}
-
-export function clearDeletedId(id: string) {
-  if (!isBrowser()) return;
-  const deleted = getDeletedIds().filter((d) => d !== id);
-  window.localStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
-}
-
-function readStore(): Tutorial[] {
-  if (!isBrowser()) return seedTutorials;
-  const deletedIds = getDeletedIds();
-
-  let list = seedTutorials;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Tutorial[];
-      if (Array.isArray(parsed)) {
-        list = parsed;
-      }
-    }
-  } catch {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seedTutorials));
-  }
-
-  return list
-    .filter((t) => !deletedIds.includes(t.id))
-    .map((t) => ({
-      ...t,
-      image: t.image?.startsWith("blob:")
-        ? "https://images.unsplash.com/photo-1584992236310-6edddc08acff?q=80&w=1000&auto=format&fit=crop"
-        : t.image,
-      videoUrl: t.videoUrl?.startsWith("blob:")
-        ? "https://www.youtube.com/embed/aAxGTnVNJiE"
-        : t.videoUrl,
-    }));
-}
-
-function writeStore(list: Tutorial[]) {
-  if (!isBrowser()) return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  window.dispatchEvent(new Event("cozyknots:tutorials-changed"));
-}
-
-/** All tutorials, built-in + anything added from /admin. */
-export function getAllTutorials(): Tutorial[] {
-  return readStore();
-}
-
-export function getTutorial(id: string): Tutorial | undefined {
-  return readStore().find((t) => t.id === id);
-}
-
-/** Adds a new tutorial, or overwrites one with the same id. */
-export function addTutorial(tutorial: Tutorial) {
-  clearDeletedId(tutorial.id);
-  const list = readStore();
-  const index = list.findIndex((t) => t.id === tutorial.id);
-  if (index >= 0) {
-    list[index] = tutorial;
-  } else {
-    list.push(tutorial);
-  }
-  writeStore(list);
-}
-
-export function removeTutorial(id: string) {
-  addDeletedId(id);
-  writeStore(readStore().filter((t) => t.id !== id));
-}
-
-export function subscribeToTutorialChanges(callback: () => void) {
-  if (!isBrowser()) return () => {};
-  const handler = () => callback();
-  window.addEventListener("storage", handler);
-  window.addEventListener("cozyknots:tutorials-changed", handler);
-  return () => {
-    window.removeEventListener("storage", handler);
-    window.removeEventListener("cozyknots:tutorials-changed", handler);
-  };
-}
 
 export function getVideoEmbedUrl(url: string): string {
   if (!url) return "";
