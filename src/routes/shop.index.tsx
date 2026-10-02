@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search as SearchIcon, Star } from "lucide-react";
+import { Search as SearchIcon, Star, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 import { products, categories, type Product } from "@/lib/data";
+import { useWishlist } from "@/lib/wishlist";
 
 type ShopSearch = { category?: string; q?: string };
 
@@ -31,6 +32,7 @@ function Shop() {
   const { category, q } = Route.useSearch();
   const navigate = useNavigate({ from: "/shop" });
   const [query, setQuery] = useState(q ?? "");
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const active = category ?? "All";
 
@@ -44,11 +46,21 @@ function Shop() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl sm:text-5xl">The Shop</h1>
-        <p className="text-muted-foreground mt-2">
-          Handmade with natural fibres, ready to ship in 3–5 days.
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="font-display text-4xl sm:text-5xl">The Shop</h1>
+          <p className="text-muted-foreground mt-2">
+            Handmade with natural fibres, ready to ship in 3–5 days.
+          </p>
+        </div>
+
+        {/* AI Recommendation Banner CTA */}
+        <Link
+          to="/recommendations"
+          className="btn-primary btn-primary-hover px-5 py-2.5 rounded-full font-semibold text-xs whitespace-nowrap self-start sm:self-auto shadow-cozy inline-flex items-center gap-1.5"
+        >
+          <span>✨ Find Products For Me</span>
+        </Link>
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
@@ -102,7 +114,7 @@ function Shop() {
               params={{ id: p.id }}
               className="card-soft overflow-hidden group block"
             >
-              <div className="aspect-square overflow-hidden bg-muted">
+              <div className="aspect-square overflow-hidden bg-muted relative">
                 <img
                   src={p.image}
                   alt={p.name}
@@ -111,6 +123,24 @@ function Shop() {
                   loading="lazy"
                   className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleWishlist(p);
+                  }}
+                  aria-label={isInWishlist(p.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur-xs text-foreground transition-transform active:scale-95 hover:bg-background hover:scale-110 shadow-xs z-10"
+                >
+                  <Heart
+                    className={`h-4 w-4 transition-colors ${
+                      isInWishlist(p.id)
+                        ? "fill-primary text-primary"
+                        : "text-muted-foreground hover:text-primary"
+                    }`}
+                  />
+                </button>
               </div>
               <div className="p-5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -121,7 +151,7 @@ function Shop() {
                 </div>
                 <div className="mt-2 flex items-baseline justify-between gap-2">
                   <h3 className="font-display text-lg leading-tight">{p.name}</h3>
-                  <span className="font-semibold">${p.price}</span>
+                  <span className="font-semibold">₹{p.price.toLocaleString("en-IN")}</span>
                 </div>
               </div>
             </Link>

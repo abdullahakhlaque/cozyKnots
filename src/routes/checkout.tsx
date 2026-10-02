@@ -3,6 +3,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { ArrowLeft, Check, Truck, CreditCard, MapPin } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
+import { getApiBaseUrl } from "@/lib/data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
@@ -18,7 +19,6 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (!user && typeof window !== "undefined" && !window.localStorage.getItem("ck_user_v1")) {
-      // Cart items already persist locally, so they remain available after registration.
       navigate({ to: "/auth", search: { redirect: "/checkout" } });
     }
   }, [user, navigate]);
@@ -37,7 +37,6 @@ function CheckoutPage() {
     country: "",
   });
 
-  // Redirect if cart is empty
   if (items.length === 0 && !placedOrder) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
@@ -65,7 +64,7 @@ function CheckoutPage() {
         total,
       };
 
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch(`${getApiBaseUrl()}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -128,7 +127,7 @@ function CheckoutPage() {
 
             <div className="pt-2 border-t border-border/60 flex justify-between font-medium">
               <span>Total Amount Paid:</span>
-              <span className="text-primary font-bold">${placedOrder.total.toFixed(2)}</span>
+              <span className="text-primary font-bold">₹{Number(placedOrder.total).toLocaleString("en-IN")}</span>
             </div>
           </div>
 
@@ -267,7 +266,7 @@ function CheckoutPage() {
                     <span className="text-muted-foreground">
                       {item.product.name} x{item.qty}
                     </span>
-                    <span>${(item.product.price * item.qty).toFixed(2)}</span>
+                    <span>₹{(item.product.price * item.qty).toLocaleString("en-IN")}</span>
                   </div>
                 ),
               )}
@@ -276,7 +275,7 @@ function CheckoutPage() {
             <div className="border-t border-border pt-3 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toLocaleString("en-IN")}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
@@ -284,7 +283,7 @@ function CheckoutPage() {
               </div>
               <div className="flex justify-between font-medium text-lg pt-2">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toLocaleString("en-IN")}</span>
               </div>
             </div>
           </div>

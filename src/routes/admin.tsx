@@ -24,6 +24,8 @@ import {
   addTutorial,
   removeTutorial as removeLocalTutorial,
   getDeletedIds,
+  getApiBaseUrl,
+  resolveMediaUrl,
   type Tutorial,
 } from "@/lib/data";
 import { toast } from "sonner";
@@ -44,6 +46,7 @@ interface Step {
 
 interface OrderItem {
   name: string;
+  price: number;
   qty: number;
 }
 
@@ -114,26 +117,19 @@ function AdminPanel() {
 
   const fetchTutorials = async () => {
     const deleted = getDeletedIds();
-    const local = getAllTutorials();
-    const localTutorials = Array.isArray(local) ? local : [];
     try {
-      const res = await fetch("http://localhost:5000/api/tutorials");
+      const res = await fetch(`${getApiBaseUrl()}/api/tutorials`);
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
-          // A fresh backend can have fewer records than the browser store.
-          // Keep both, with the admin's latest local edit taking precedence.
-          const merged = new Map<string, Tutorial>();
-          data.forEach((tutorial: Tutorial) => merged.set(tutorial.id, tutorial));
-          localTutorials.forEach((tutorial) => merged.set(tutorial.id, tutorial));
-          setTutorials([...merged.values()].filter((t) => !deleted.includes(t.id)));
-          return;
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach((t: Tutorial) => addTutorial(t));
         }
       }
     } catch (err) {
-      console.log("Backend offline, using local data store");
+      console.log("Backend notice, using local data store");
     }
-    setTutorials(localTutorials.filter((t) => !deleted.includes(t.id)));
+    const local = getAllTutorials();
+    setTutorials(Array.isArray(local) ? local.filter((t) => !deleted.includes(t.id)) : []);
   };
 
   const fetchOrders = async () => {
@@ -301,6 +297,7 @@ function AdminPanel() {
 
     if (videoFile || imageFile || pdfFile) {
       const formData = new FormData();
+      formData.append("id", id);
       formData.append("title", title);
       formData.append("level", level);
       formData.append("duration", duration);
@@ -314,7 +311,7 @@ function AdminPanel() {
       formData.append("steps", JSON.stringify(filledSteps));
 
       try {
-        const res = await fetch("http://localhost:5000/api/tutorials", {
+        const res = await fetch(`${getApiBaseUrl()}/api/tutorials`, {
           method: "POST",
           body: formData,
         });
@@ -944,7 +941,7 @@ function AdminPanel() {
                             </ul>
                           </td>
                           <td className="p-4 font-bold font-mono">
-                            ${Number(o.total || 0).toFixed(2)}
+                            ₹{Number(o.total || 0).toLocaleString("en-IN")}
                           </td>
                           <td className="p-4">
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-700 px-3 py-1 text-xs font-semibold">

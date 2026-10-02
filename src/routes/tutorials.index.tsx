@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, AlertTriangle } from "lucide-react";
+import { Clock, AlertTriangle, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   getAllTutorials,
   getVideoEmbedUrl,
+  openTutorialPdf,
   subscribeToTutorialChanges,
   type Tutorial,
 } from "@/lib/data";
@@ -38,12 +39,30 @@ function TutorialsPage() {
   useEffect(() => {
     let cancelled = false;
 
-    const loadTutorials = () => {
+    const loadTutorials = async () => {
       try {
-        // Admin publishing writes here, so this page reads the same store.
-        const list = getAllTutorials();
+        const local = getAllTutorials();
+        const localMap = new Map((Array.isArray(local) ? local : []).map((t) => [t.id, t]));
+
+        try {
+          const res = await fetch("http://localhost:5000/api/tutorials");
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : [];
+            list.forEach((tutorial: Tutorial) => localMap.set(tutorial.id, tutorial));
+            const merged = [...localMap.values()];
+            if (!cancelled) {
+              setTutorialList(merged);
+              setError(null);
+            }
+            return;
+          }
+        } catch {
+          // Fall back to the browser-local store when the backend is offline.
+        }
+
         if (!cancelled) {
-          setTutorialList(list);
+          setTutorialList(local);
           setError(null);
         }
       } catch (err: unknown) {
@@ -55,8 +74,10 @@ function TutorialsPage() {
       }
     };
 
-    loadTutorials();
-    const unsubscribe = subscribeToTutorialChanges(loadTutorials);
+    void loadTutorials();
+    const unsubscribe = subscribeToTutorialChanges(() => {
+      void loadTutorials();
+    });
 
     return () => {
       cancelled = true;
@@ -72,7 +93,7 @@ function TutorialsPage() {
         <h1 className="font-display text-4xl sm:text-5xl">Learn to crochet</h1>
         <p className="text-muted-foreground mt-2 max-w-2xl">
           Pull up a chair, grab your hook, and pick a lesson. Every tutorial has a video, materials
-          list, and written steps.
+          list, and printable pattern guide.
         </p>
       </div>
 
@@ -131,84 +152,93 @@ function TutorialCard({ t }: { t: Tutorial }) {
     (previewUrl.endsWith(".mp4") || previewUrl.endsWith(".webm") || previewUrl.endsWith(".mov"));
 
   return (
-    <Link
-      to="/tutorials/$id"
-      params={{ id: t.id }}
-      className="card-soft overflow-hidden group block"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="relative aspect-video overflow-hidden bg-muted">
-        {/* Default: always show cover image */}
-        <img
-          src={t.image}
-          alt={t.title}
-          width={1200}
-          height={800}
-          loading="lazy"
-          className={`h-full w-full object-cover transition-transform duration-500 ${isHovered ? "scale-105" : ""}`}
-          style={{ display: isHovered && (isYouTube || isDirectVideo) ? "none" : "block" }}
-        />
-
-        {/* Hover: play YouTube video */}
-        {isHovered && isYouTube && (
-          <iframe
-            src={`${previewUrl}${previewUrl.includes("?") ? "&" : "?"}autoplay=1&mute=1&controls=0&modestbranding=1&rel=0`}
-            title={t.title}
+    <div className="card-soft overflow-hidden group block">
+      <Link
+        to="/tutorials/$id"
+        params={{ id: t.id }}
+        className="block"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative aspect-video overflow-hidden bg-muted">
+          {/* Default: always show cover image */}
+          <img
+            src={t.image}
+            alt={t.title}
+            width={1200}
+            height={800}
             loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="h-full w-full absolute inset-0"
+            className={`h-full w-full object-cover transition-transform duration-500 ${isHovered ? "scale-105" : ""}`}
+            style={{ display: isHovered && (isYouTube || isDirectVideo) ? "none" : "block" }}
           />
-        )}
 
-        {/* Hover: play direct video file */}
-        {isHovered && isDirectVideo && (
-          <video
-            src={previewUrl}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="h-full w-full object-cover absolute inset-0"
-          />
-        )}
+          {/* Hover: play YouTube video */}
+          {isHovered && isYouTube && (
+            <iframe
+              src={`${previewUrl}${previewUrl.includes("?") ? "&" : "?"}autoplay=1&mute=1&controls=0&modestbranding=1&rel=0`}
+              title={t.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="h-full w-full absolute inset-0"
+            />
+          )}
 
-        <span className="absolute top-3 left-3 rounded-full bg-background/90 backdrop-blur px-3 py-1 text-xs font-semibold">
-          {t.level}
-        </span>
-        <span
-          className={`absolute top-3 right-3 rounded-full px-3 py-1 text-xs font-semibold ${t.free ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
-        >
-          {t.free ? "Free" : `$${t.price}`}
-        </span>
-      </div>
+          {/* Hover: play direct video file */}
+          {isHovered && isDirectVideo && (
+            <video
+              src={previewUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full w-full object-cover absolute inset-0"
+            />
+          )}
+
+          <span className="absolute top-3 left-3 rounded-full bg-background/90 backdrop-blur px-3 py-1 text-xs font-semibold">
+            {t.level}
+          </span>
+          <span
+            className={`absolute top-3 right-3 rounded-full px-3 py-1 text-xs font-semibold ${t.free ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+          >
+            {t.free ? "Free" : `$${t.price}`}
+          </span>
+        </div>
+      </Link>
+
       <div className="p-5">
-        <h3 className="font-display text-xl leading-tight">{t.title}</h3>
+        <Link to="/tutorials/$id" params={{ id: t.id }}>
+          <h3 className="font-display text-xl leading-tight hover:text-primary transition-colors">
+            {t.title}
+          </h3>
+        </Link>
         <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{t.description}</p>
         <div className="mt-3 inline-flex items-center gap-1 text-xs text-muted-foreground">
           <Clock className="h-3.5 w-3.5" /> {t.duration}
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+        <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-3">
+          <Link
+            to="/tutorials/$id"
+            params={{ id: t.id }}
+            className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
             Open lesson
-          </span>
+          </Link>
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              const url = t.pdfPattern?.trim();
-              if (url) window.open(url, "_blank", "noopener,noreferrer");
+              openTutorialPdf(t);
             }}
-            disabled={!t.pdfPattern?.trim()}
-            className="text-xs font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground disabled:no-underline disabled:opacity-70"
+            className="inline-flex items-center gap-1 rounded-xl bg-emerald-600/15 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
           >
-            {t.pdfPattern?.trim() ? "Download pattern" : "Pattern coming soon"}
+            <FileText className="h-3.5 w-3.5" /> Download pattern
           </button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

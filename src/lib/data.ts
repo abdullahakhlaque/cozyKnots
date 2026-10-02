@@ -23,7 +23,7 @@ export const products: Product[] = [
   {
     id: "cream-tote",
     name: "Cream Cotton Tote",
-    price: 42,
+    price: 1499,
     category: "Bags",
     image: bagImg,
     stock: 8,
@@ -34,7 +34,7 @@ export const products: Product[] = [
   {
     id: "lavender-bunny",
     name: "Lavender Bunny Plushie",
-    price: 28,
+    price: 1299,
     category: "Plushies",
     image: bunnyImg,
     stock: 12,
@@ -45,7 +45,7 @@ export const products: Product[] = [
   {
     id: "cozy-sweater",
     name: "Cozy Cream Sweater",
-    price: 128,
+    price: 2999,
     category: "Clothing",
     image: sweaterImg,
     stock: 4,
@@ -55,7 +55,7 @@ export const products: Product[] = [
   {
     id: "flower-coasters",
     name: "Pink Flower Coasters (Set of 4)",
-    price: 18,
+    price: 1099,
     category: "Home Décor",
     image: coastersImg,
     stock: 20,
@@ -65,7 +65,7 @@ export const products: Product[] = [
   {
     id: "bucket-hat",
     name: "Sand Bucket Hat",
-    price: 34,
+    price: 1199,
     category: "Accessories",
     image: hatImg,
     stock: 6,
@@ -76,7 +76,7 @@ export const products: Product[] = [
   {
     id: "throw-blanket",
     name: "Waffle Throw Blanket",
-    price: 96,
+    price: 2499,
     category: "Home Décor",
     image: blanketImg,
     stock: 3,
@@ -208,6 +208,26 @@ function isBrowser() {
   return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 }
 
+export function getApiBaseUrl(): string {
+  if (typeof window !== "undefined" && window.location?.hostname) {
+    const host = window.location.hostname;
+    return `http://${host}:5000`;
+  }
+  return "http://localhost:5000";
+}
+
+export function resolveMediaUrl(url?: string): string {
+  if (!url) return "";
+  if (url.startsWith("/uploads/")) {
+    return `${getApiBaseUrl()}${url}`;
+  }
+  if (url.includes("/uploads/")) {
+    const filename = url.split("/uploads/")[1];
+    return `${getApiBaseUrl()}/uploads/${filename}`;
+  }
+  return url;
+}
+
 export function getDeletedIds(): string[] {
   if (!isBrowser()) return [];
   try {
@@ -244,7 +264,7 @@ function readStore(): Tutorial[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Tutorial[];
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         list = parsed;
       }
     }
@@ -258,17 +278,17 @@ function readStore(): Tutorial[] {
       ...t,
       image: t.image?.startsWith("blob:")
         ? "https://images.unsplash.com/photo-1584992236310-6edddc08acff?q=80&w=1000&auto=format&fit=crop"
-        : t.image,
+        : resolveMediaUrl(t.image),
       videoUrl: t.videoUrl?.startsWith("blob:")
         ? "https://www.youtube.com/embed/aAxGTnVNJiE"
-        : t.videoUrl,
+        : resolveMediaUrl(t.videoUrl),
+      pdfPattern: resolveMediaUrl(t.pdfPattern),
     }));
 }
 
 function writeStore(list: Tutorial[]) {
   if (!isBrowser()) return;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  window.dispatchEvent(new Event("cozyknots:tutorials-changed"));
 }
 
 /** All tutorials, built-in + anything added from /admin. */
@@ -331,4 +351,58 @@ export function getVideoEmbedUrl(url: string): string {
     return url;
   }
   return url;
+}
+
+export function openTutorialPdf(tutorial: Tutorial) {
+  const url = resolveMediaUrl(tutorial.pdfPattern);
+  if (url && url.trim() !== "") {
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  
+  const htmlContent = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>${tutorial.title} — CozyKnots Pattern PDF</title>
+    <style>
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #2d2d2d; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+      h1 { color: #9c4355; border-bottom: 2px solid #e5c5cd; padding-bottom: 10px; font-size: 26px; }
+      .meta-box { background: #faf5f6; border: 1px solid #f0d8df; padding: 15px; border-radius: 12px; margin: 20px 0; }
+      h2 { color: #6b2e3b; font-size: 18px; margin-top: 25px; }
+      ul, ol { padding-left: 24px; }
+      li { margin-bottom: 8px; font-size: 14px; }
+      .footer { margin-top: 50px; font-size: 12px; text-align: center; color: #888; border-t: 1px solid #eee; padding-top: 15px; }
+      @media print {
+        body { padding: 0; max-width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧶 CozyKnots — ${tutorial.title}</h1>
+    <div class="meta-box">
+      <p><strong>Difficulty Level:</strong> ${tutorial.level}</p>
+      <p><strong>Estimated Duration:</strong> ${tutorial.duration}</p>
+      <p><strong>Description:</strong> ${tutorial.description}</p>
+    </div>
+    <h2>Materials Needed</h2>
+    <ul>
+      ${tutorial.materials.map((m) => `<li>${m}</li>`).join("")}
+    </ul>
+    <h2>Step-by-Step Instructions</h2>
+    <ol>
+      ${tutorial.steps.map((s) => `<li>${s}</li>`).join("")}
+    </ol>
+    <div class="footer">
+      <p>© CozyKnots Crochet Learning Hub — Happy Crafting!</p>
+    </div>
+    <script>
+      window.onload = function() { window.print(); };
+    </script>
+  </body>
+</html>`;
+
+  const blob = new Blob([htmlContent], { type: "text/html" });
+  const blobUrl = URL.createObjectURL(blob);
+  window.open(blobUrl, "_blank");
 }

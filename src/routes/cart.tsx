@@ -18,7 +18,7 @@ function CartPage() {
   const { items, remove, setQty, total, count } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const shipping = total >= 75 || total === 0 ? 0 : 6;
+  const shipping = total >= 1500 || total === 0 ? 0 : 99;
   const grand = total + shipping;
 
   const handleCheckout = () => {
@@ -73,7 +73,7 @@ function CartPage() {
                     </Link>
                     <div className="text-xs text-muted-foreground">{product.category}</div>
                   </div>
-                  <span className="font-semibold">${product.price * qty}</span>
+                  <span className="font-semibold">₹{(product.price * qty).toLocaleString("en-IN")}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <div className="inline-flex items-center rounded-full border border-border">
@@ -102,15 +102,15 @@ function CartPage() {
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Subtotal</dt>
-              <dd>${total.toFixed(2)}</dd>
+              <dd>₹{total.toLocaleString("en-IN")}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Shipping</dt>
-              <dd>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</dd>
+              <dd>{shipping === 0 ? "Free" : `₹${shipping.toLocaleString("en-IN")}`}</dd>
             </div>
             <div className="flex justify-between border-t border-border pt-3 mt-3 font-semibold text-base">
               <dt>Total</dt>
-              <dd>${grand.toFixed(2)}</dd>
+              <dd>₹{grand.toLocaleString("en-IN")}</dd>
             </div>
           </dl>
           <button

@@ -82,7 +82,7 @@ function Profile() {
                     <div className="font-medium">{p.name}</div>
                     <div className="text-xs text-muted-foreground">Order #100{i + 1} · Shipped</div>
                   </div>
-                  <span className="text-sm font-semibold">${p.price}</span>
+                  <span className="text-sm font-semibold">₹{p.price.toLocaleString("en-IN")}</span>
                 </li>
               ))}
             </ul>

@@ -8,13 +8,14 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google"; // <-- Added Google import
 
 import appCss from "../styles.css?url";
 import { CartProvider } from "../lib/cart";
+import { WishlistProvider } from "../lib/wishlist";
 import { AuthProvider } from "../lib/auth";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { ChatWidget } from "../components/ChatWidget";
 
 function NotFoundComponent() {
   return (
@@ -129,9 +130,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Added Google Provider to wrap your authentication system */}
-      <GoogleOAuthProvider clientId="://googleusercontent.com">
-        <AuthProvider>
+      <AuthProvider>
+        <WishlistProvider>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
               <Header />
@@ -139,10 +139,11 @@ function RootComponent() {
                 <Outlet />
               </main>
               <Footer />
+              <ChatWidget />
             </div>
           </CartProvider>
-        </AuthProvider>
-      </GoogleOAuthProvider>
+        </WishlistProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

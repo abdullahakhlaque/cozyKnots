@@ -1,10 +1,20 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Bookmark, Check, Clock, Lock, FileText, Download } from "lucide-react";
-import { getTutorial, getVideoEmbedUrl, type Tutorial } from "@/lib/data";
+import { getTutorial, getVideoEmbedUrl, openTutorialPdf, type Tutorial } from "@/lib/data";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/tutorials/$id")({
   loader: async ({ params }): Promise<Tutorial> => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tutorials/${params.id}`);
+      if (res.ok) {
+        const tutorial = (await res.json()) as Tutorial;
+        if (tutorial) return tutorial;
+      }
+    } catch {
+      // Fall back to local browser storage when the backend is offline.
+    }
+
     const t = await getTutorial(params.id);
     if (!t) throw notFound();
     return t;
@@ -37,6 +47,10 @@ function TutorialPage() {
   const locked = !t.free && !user;
   const videoUrl = getVideoEmbedUrl(t.videoUrl);
   const isDirectVideo = /\.(mp4|webm|mov)(?:[?#].*)?$/i.test(videoUrl);
+
+  const handleOpenPattern = () => {
+    openTutorialPdf(t);
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
@@ -107,17 +121,13 @@ function TutorialPage() {
         <button className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted">
           <Check className="h-4 w-4" /> Mark complete
         </button>
-        {t.pdfPattern && (
-          <a
-            href={t.pdfPattern}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-            className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-semibold hover:bg-emerald-700 shadow-sm transition-colors"
-          >
-            <FileText className="h-4 w-4" /> Download Pattern (PDF)
-          </a>
-        )}
+        <button
+          type="button"
+          onClick={handleOpenPattern}
+          className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-5 py-2 text-sm font-semibold hover:bg-emerald-700 shadow-sm transition-colors cursor-pointer"
+        >
+          <FileText className="h-4 w-4" /> Open Pattern (PDF)
+        </button>
       </div>
 
       <div className="mt-12 grid gap-10 md:grid-cols-3">
@@ -146,22 +156,18 @@ function TutorialPage() {
                 ))}
               </ul>
             </div>
-            {t.pdfPattern && (
-              <div className="pt-4 border-t border-border/80">
-                <h4 className="font-display text-sm font-semibold mb-2 flex items-center gap-1 text-emerald-800">
-                  <FileText className="h-4 w-4" /> Printable Pattern
-                </h4>
-                <a
-                  href={t.pdfPattern}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white py-2 text-xs font-semibold hover:bg-emerald-700 transition-colors"
-                >
-                  <Download className="h-3.5 w-3.5" /> Get Pattern PDF
-                </a>
-              </div>
-            )}
+            <div className="pt-4 border-t border-border/80">
+              <h4 className="font-display text-sm font-semibold mb-2 flex items-center gap-1 text-emerald-800">
+                <FileText className="h-4 w-4" /> Printable Pattern
+              </h4>
+              <button
+                type="button"
+                onClick={handleOpenPattern}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white py-2 text-xs font-semibold hover:bg-emerald-700 transition-colors cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Open Pattern PDF
+              </button>
+            </div>
           </div>
         </aside>
       </div>

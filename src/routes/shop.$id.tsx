@@ -3,6 +3,7 @@ import { ArrowLeft, Heart, ShoppingBag, Star, Truck } from "lucide-react";
 import { useState } from "react";
 import { getProduct, products, type Product } from "@/lib/data";
 import { useCart } from "@/lib/cart";
+import { useWishlist } from "@/lib/wishlist";
 
 export const Route = createFileRoute("/shop/$id")({
   loader: ({ params }): Product => {
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/shop/$id")({
 function ProductPage() {
   const product = Route.useLoaderData();
   const { add } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -64,7 +66,7 @@ function ProductPage() {
           <div className="text-sm text-muted-foreground">{product.category}</div>
           <h1 className="font-display text-4xl mt-1">{product.name}</h1>
           <div className="mt-3 flex items-center gap-3">
-            <span className="text-2xl font-semibold">${product.price}</span>
+            <span className="text-2xl font-semibold">₹{product.price.toLocaleString("en-IN")}</span>
             <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
               <Star className="h-4 w-4 fill-primary text-primary" /> {product.rating} · 42 reviews
             </span>
@@ -72,7 +74,7 @@ function ProductPage() {
           <p className="mt-5 text-muted-foreground">{product.description}</p>
 
           <div className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <Truck className="h-4 w-4" /> Ships in 3–5 days · Free over $75
+            <Truck className="h-4 w-4" /> Ships in 3–5 days · Free over ₹1,500
           </div>
 
           <div className="mt-8 flex items-center gap-3">
@@ -103,10 +105,17 @@ function ProductPage() {
               {added ? "Added!" : "Add to cart"}
             </button>
             <button
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted"
-              aria-label="Save"
+              onClick={() => toggleWishlist(product)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted transition-transform active:scale-95"
+              aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <Heart className="h-5 w-5" />
+              <Heart
+                className={`h-5 w-5 transition-colors ${
+                  isInWishlist(product.id)
+                    ? "fill-primary text-primary"
+                    : "text-foreground hover:text-primary"
+                }`}
+              />
             </button>
           </div>
 
@@ -140,7 +149,7 @@ function ProductPage() {
               </div>
               <div className="p-4 flex items-baseline justify-between">
                 <h3 className="font-display text-lg">{p.name}</h3>
-                <span className="font-semibold">${p.price}</span>
+                <span className="font-semibold">₹{p.price.toLocaleString("en-IN")}</span>
               </div>
             </Link>
           ))}

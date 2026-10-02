@@ -33,11 +33,13 @@ function Checkout() {
   const shipping = total >= 75 || total === 0 ? 0 : 6;
   const grand = total + shipping;
 
-  useEffect(() => {
+    useEffect(() => {
     if (!user) {
-      navigate({ to: "/" });
+      // Send the user directly to your backend Node server to log in with Google
+    window.location.href ="http://localhost:5000/api/auth/google";
     }
-  }, [user, navigate]);
+  }, [user]);
+
 
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

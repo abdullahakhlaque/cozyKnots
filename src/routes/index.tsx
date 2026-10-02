@@ -15,7 +15,7 @@ function Home() {
   useEffect(() => {
     let active = true;
     const loadTutorials = async () => {
-      const list = await getAllTutorials();
+      const list = getAllTutorials();
       if (active) setTrending(list.slice(0, 3));
     };
 

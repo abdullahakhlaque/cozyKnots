@@ -16,8 +16,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as IdentifyRouteImport } from './routes/identify'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as TutorialsRouteImport } from './routes/tutorials'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as TutorialsIndexRouteImport } from './routes/tutorials.index'
@@ -58,14 +61,29 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IdentifyRoute = IdentifyRouteImport.update({
+  id: '/identify',
+  path: '/identify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecommendationsRoute = RecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TutorialsRoute = TutorialsRouteImport.update({
   id: '/tutorials',
   path: '/tutorials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIndexRoute = ShopIndexRouteImport.update({
@@ -97,8 +115,11 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/identify': typeof IdentifyRoute
   '/profile': typeof ProfileRoute
+  '/recommendations': typeof RecommendationsRoute
   '/tutorials': typeof TutorialsRouteWithChildren
+  '/wishlist': typeof WishlistRoute
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
   '/shop/': typeof ShopIndexRoute
@@ -112,7 +133,10 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/identify': typeof IdentifyRoute
   '/profile': typeof ProfileRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/wishlist': typeof WishlistRoute
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
   '/shop': typeof ShopIndexRoute
@@ -127,8 +151,11 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/identify': typeof IdentifyRoute
   '/profile': typeof ProfileRoute
+  '/recommendations': typeof RecommendationsRoute
   '/tutorials': typeof TutorialsRouteWithChildren
+  '/wishlist': typeof WishlistRoute
   '/shop/$id': typeof ShopIdRoute
   '/tutorials/$id': typeof TutorialsIdRoute
   '/shop/': typeof ShopIndexRoute
@@ -144,8 +171,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/identify'
     | '/profile'
+    | '/recommendations'
     | '/tutorials'
+    | '/wishlist'
     | '/shop/$id'
     | '/tutorials/$id'
     | '/shop/'
@@ -159,7 +189,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/identify'
     | '/profile'
+    | '/recommendations'
+    | '/wishlist'
     | '/shop/$id'
     | '/tutorials/$id'
     | '/shop'
@@ -173,8 +206,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/identify'
     | '/profile'
+    | '/recommendations'
     | '/tutorials'
+    | '/wishlist'
     | '/shop/$id'
     | '/tutorials/$id'
     | '/shop/'
@@ -189,8 +225,11 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
+  IdentifyRoute: typeof IdentifyRoute
   ProfileRoute: typeof ProfileRoute
+  RecommendationsRoute: typeof RecommendationsRoute
   TutorialsRoute: typeof TutorialsRouteWithChildren
+  WishlistRoute: typeof WishlistRoute
   ShopIdRoute: typeof ShopIdRoute
   ShopIndexRoute: typeof ShopIndexRoute
 }
@@ -246,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/identify': {
+      id: '/identify'
+      path: '/identify'
+      fullPath: '/identify'
+      preLoaderRoute: typeof IdentifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -253,11 +299,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/recommendations': {
+      id: '/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof RecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tutorials': {
       id: '/tutorials'
       path: '/tutorials'
       fullPath: '/tutorials'
       preLoaderRoute: typeof TutorialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/': {
@@ -313,8 +373,11 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
+  IdentifyRoute: IdentifyRoute,
   ProfileRoute: ProfileRoute,
+  RecommendationsRoute: RecommendationsRoute,
   TutorialsRoute: TutorialsRouteWithChildren,
+  WishlistRoute: WishlistRoute,
   ShopIdRoute: ShopIdRoute,
   ShopIndexRoute: ShopIndexRoute,
 }
